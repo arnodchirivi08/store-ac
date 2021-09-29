@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
 @Controller('costumers')
 export class CostumersController {
@@ -13,6 +13,20 @@ export class CostumersController {
         return {
             message: 'creating costumer',
             payload
+        }
+    }
+
+    update(@Param('id') id: number, payload: any) {
+        return {
+            id,
+            payload
+        }
+    }
+
+    @Delete(':id')
+    delete(@Param('id') id: number) {
+        return {
+            id
         }
     }
 }

@@ -1,4 +1,8 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, Redirect } from '@nestjs/common';
+import {
+    Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, Redirect, HttpStatus,
+    Res
+} from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller('products')
 export class ProductsController {
@@ -27,9 +31,14 @@ export class ProductsController {
     }
 
     /*Parametros */
+    /*uso de codigos de estado */
     @Get(':productId')
-    getProduct(@Param('productId') productId: any) {
-        return { message: `Product ${productId}` };
+    @HttpCode(HttpStatus.ACCEPTED)
+    getOne(@Res() response: Response, @Param('productId') productId: any) {
+        response.status(200).send({
+            message: `product ${productId}`
+        })
+        // return { message: `Product ${productId}` };
     }
 
     @Post()

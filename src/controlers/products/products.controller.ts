@@ -4,9 +4,13 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
+import { ProductsService } from '../../services/products/products.service';
+
 @Controller('products')
 export class ProductsController {
+    constructor(private productsService: ProductsService) {
 
+    }
 
     /*Ruta comodines, tener en cuenta que se debe colocar al principio*/
     @Get('ab*cd')
@@ -27,36 +31,30 @@ export class ProductsController {
         @Query('limit') limit = 200,
         @Query('offset') offset = 50,
         @Query('brand') brand: string) {
-        return { message: `products: limit=> ${limit} offset=>${offset} brand=>${brand}` }
+        return this.productsService.findAll();
     }
 
     /*Parametros */
     /*uso de codigos de estado */
     @Get(':productId')
     @HttpCode(HttpStatus.ACCEPTED)
-    getOne(@Res() response: Response, @Param('productId') productId: any) {
-        response.status(200).send({
-            message: `product ${productId}`
-        })
-        // return { message: `Product ${productId}` };
+    getOne(@Param('productId') productId: number) {
+        // response.status(200).send({
+        //     message: `product ${productId}`
+        // })
+        return this.productsService.findOne(+productId);
     }
 
     @Post()
     @HttpCode(202)
     // @Header('Cache-control', 'none')
     create(@Body() payload: any) {
-        return {
-            message: 'Esta acción agrega un nuevo gato.',
-            payload
-        };
+        return this.productsService.create(payload);
     }
 
     @Put(':id')
     update(@Param('id') id: number, @Body() payload: any) {
-        return {
-            id,
-            payload
-        }
+        return this.productsService.update(+id, payload);
     }
 
     @Delete(':id')
